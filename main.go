@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/orangdong/go-chujang/config"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	err := config.SetupAndRunApp()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("App is running")
 }
