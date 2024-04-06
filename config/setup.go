@@ -7,9 +7,22 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/orangdong/go-chujang/app/routes"
+	"github.com/orangdong/go-chujang/database"
 )
 
 func SetupAndRunApp() error {
+	// load env
+	config, err := GetConfig()
+	if err != nil {
+		return err
+	}
+
+	// setup database
+	db, err := database.ConnectDB(config.DBURL)
+	if err != nil {
+		return err
+	}
+
 	// create app
 	app := fiber.New()
 
@@ -22,13 +35,15 @@ func SetupAndRunApp() error {
 	}))
 
 	// setup routes
-	routes.SetupRoutes(app)
+	routes.SetupRoutes(app, db)
 
 	// attach swagger
 	// config.AddSwaggerRoutes(app)
 
 	// get the port and start
-	port := "3000"
-	app.Listen(":" + port)
+	port := config.Port
+	host := config.Host
+
+	app.Listen(host + ":" + port)
 	return nil
 }
