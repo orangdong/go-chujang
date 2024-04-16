@@ -7,3 +7,5 @@
 - Testify, for testing
 - sqlx, for database
 - pgx, for postgreSQL driver
+- squirrel, for sql generation
+- golang-migrate, for migration
