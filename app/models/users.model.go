@@ -16,3 +16,11 @@ type UserDTO struct {
 	Email    string  `json:"email"`
 	Avatar   *string `json:"avatar"`
 }
+
+type UserCreate struct {
+	Name     string `json:"name" validate:"required"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Avatar   string `json:"avatar" validate:"omitempty,url"`
+}
