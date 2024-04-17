@@ -1,5 +1,6 @@
 # Go Fiber Server
 
+## Bookmark app with support of LLM AI Chat
 ## Modules used
 - Air, for hot reload
 - Fiber, for web server
@@ -9,3 +10,4 @@
 - pgx, for postgreSQL driver
 - squirrel, for sql generation
 - golang-migrate, for migration
+- go-playground/validator, for validation
