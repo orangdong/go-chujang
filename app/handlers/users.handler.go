@@ -18,7 +18,7 @@ func NewUserHandler(db *sqlx.DB) *userHandler {
 	return &userHandler{DB: db}
 }
 
-func (u *userHandler) GetUsers(c *fiber.Ctx) error {
+func (u *userHandler) GetUsers(c fiber.Ctx) error {
 	// get users
 	q := []models.User{}
 	users := []models.UserDTO{}
@@ -39,7 +39,7 @@ func (u *userHandler) GetUsers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(utils.NewSuccessResponse("users fetched successfully", users))
 }
 
-func (u *userHandler) GetUserById(c *fiber.Ctx) error {
+func (u *userHandler) GetUserById(c fiber.Ctx) error {
 	// get user by id
 	q := models.User{}
 	id := c.Params("id")
@@ -68,10 +68,10 @@ func (u *userHandler) GetUserById(c *fiber.Ctx) error {
 	return c.Status(200).JSON(utils.NewSuccessResponse("user with id "+id+" fetched successfully", user))
 }
 
-func (u *userHandler) CreateUser(c *fiber.Ctx) error {
+func (u *userHandler) CreateUser(c fiber.Ctx) error {
 	// create user
 	user := models.User{}
-	err := c.BodyParser(&user)
+	err := c.Bind().Body(&user)
 	fmt.Println(user, err)
 	// createUser := sq.Insert("users").Columns("name", "email").Values(user.Name, user.Email)
 	// query, _, _ := createUser.ToSql()
