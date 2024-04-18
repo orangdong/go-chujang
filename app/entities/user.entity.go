@@ -1,20 +1,12 @@
 package entities
 
 type UserModel struct {
-	ID       int     `db:"id"`
-	Name     string  `db:"name"`
-	Username string  `db:"username"`
-	Password string  `db:"password"`
-	Email    string  `db:"email"`
-	Avatar   *string `db:"avatar"`
-}
-
-type UserDTO struct {
-	ID       int     `json:"id"`
-	Name     string  `json:"name"`
-	Username string  `json:"username"`
-	Email    string  `json:"email"`
-	Avatar   *string `json:"avatar"`
+	ID       int     `db:"id" json:"id"`
+	Name     string  `db:"name" json:"name"`
+	Username string  `db:"username" json:"username"`
+	Password string  `db:"password" `
+	Email    string  `db:"email" json:"email"`
+	Avatar   *string `db:"avatar" json:"avatar"`
 }
 
 type UserCreate struct {
