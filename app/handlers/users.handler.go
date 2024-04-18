@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 	"github.com/orangdong/go-chujang/app/entities"
 	"github.com/orangdong/go-chujang/app/utils"
@@ -18,7 +18,7 @@ func NewUserHandler(db *sqlx.DB) *userHandler {
 	return &userHandler{DB: db}
 }
 
-func (u *userHandler) GetUsers(c fiber.Ctx) error {
+func (u *userHandler) GetUsers(c *fiber.Ctx) error {
 	// get users
 	q := []entities.UserModel{}
 	users := []entities.UserDTO{}
@@ -39,7 +39,7 @@ func (u *userHandler) GetUsers(c fiber.Ctx) error {
 	return c.Status(200).JSON(utils.NewSuccessResponse("users fetched successfully", users))
 }
 
-func (u *userHandler) GetUserById(c fiber.Ctx) error {
+func (u *userHandler) GetUserById(c *fiber.Ctx) error {
 	// get user by id
 	q := entities.UserModel{}
 	id := c.Params("id")
@@ -68,10 +68,10 @@ func (u *userHandler) GetUserById(c fiber.Ctx) error {
 	return c.Status(200).JSON(utils.NewSuccessResponse("user with id "+id+" fetched successfully", user))
 }
 
-func (u *userHandler) CreateUser(c fiber.Ctx) error {
+func (u *userHandler) CreateUser(c *fiber.Ctx) error {
 	// create user
 	user := entities.UserCreate{}
-	err := c.Bind().Body(&user)
+	err := c.BodyParser(&user)
 	fmt.Println(user, err)
 	// createUser := sq.Insert("users").Columns("name", "email").Values(user.Name, user.Email)
 	// query, _, _ := createUser.ToSql()
