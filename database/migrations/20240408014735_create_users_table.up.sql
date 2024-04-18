@@ -3,6 +3,5 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(255) NOT NULL,
   email VARCHAR NOT NULL,
   username VARCHAR NOT NULL,
-  password VARCHAR NOT NULL,
   avatar TEXT
 );
