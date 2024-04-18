@@ -1,5 +1,12 @@
 package utils
 
+import (
+	"fmt"
+	"strings"
+
+	"github.com/go-playground/validator/v10"
+)
+
 type SuccessResp struct {
 	Status  string      `json:"status"`
 	Message string      `json:"message"`
@@ -24,4 +31,18 @@ func NewSuccessResponse(message string, data interface{}) *SuccessResp {
 		Message: message,
 		Data:    data,
 	}
+}
+
+func Validate(data interface{}, validate *validator.Validate) string {
+	var validationErrors strings.Builder
+
+	errs := validate.Struct(data)
+	if errs != nil {
+		for _, err := range errs.(validator.ValidationErrors) {
+			elemError := fmt.Sprintf("error field: %s failed on tag: %s with value: %s;", err.Field(), err.Tag(), err.Value().(string))
+			validationErrors.WriteString(elemError)
+		}
+	}
+
+	return validationErrors.String()
 }
