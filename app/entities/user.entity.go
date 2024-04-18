@@ -1,6 +1,6 @@
-package models
+package entities
 
-type User struct {
+type UserModel struct {
 	ID       int     `db:"id"`
 	Name     string  `db:"name"`
 	Username string  `db:"username"`
