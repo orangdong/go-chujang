@@ -1,10 +1,9 @@
 package entities
 
 type UserModel struct {
-	ID       int     `db:"id" json:"id"`
+	ID       string  `db:"id" json:"id"`
 	Name     string  `db:"name" json:"name"`
 	Username string  `db:"username" json:"username"`
-	Password string  `db:"password" `
 	Email    string  `db:"email" json:"email"`
 	Avatar   *string `db:"avatar" json:"avatar"`
 }
