@@ -12,6 +12,7 @@ func UserRoutes(app *fiber.App, db *sqlx.DB) {
 	users := app.Group("/users")
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	userHandler := handlers.NewUserHandler(db, validate)
+
 	users.Get("/", userHandler.GetUsers)
 	users.Post("/", userHandler.CreateUser)
 	users.Get("/:id", userHandler.GetUserById)
