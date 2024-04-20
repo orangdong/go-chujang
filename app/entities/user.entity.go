@@ -9,8 +9,15 @@ type UserModel struct {
 }
 
 type UserCreate struct {
-	Name     string `json:"name" validate:"required"`
-	Username string `json:"username" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
-	Avatar   string `json:"avatar" validate:"omitempty,url"`
+	Name     string  `json:"name" validate:"required"`
+	Username string  `json:"username" validate:"required"`
+	Email    string  `json:"email" validate:"required,email"`
+	Avatar   *string `json:"avatar" validate:"omitempty,url"`
+}
+
+type UserUpdate struct {
+	Name     *string `json:"name" validate:"omitempty"`
+	Username *string `json:"username" validate:"omitempty"`
+	Email    *string `json:"email" validate:"omitempty,email"`
+	Avatar   *string `json:"avatar" validate:"omitempty,url"`
 }

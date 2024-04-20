@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"reflect"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -75,4 +77,50 @@ func (u *userHandler) CreateUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(201).JSON(utils.NewSuccessResponse("user created successfully", user))
+}
+
+func (u *userHandler) UpdateUser(c *fiber.Ctx) error {
+	// update user
+	user := entities.UserUpdate{}
+	updatedUser := entities.UserModel{}
+	id := c.Params("id")
+	err := c.BodyParser(&user)
+	errValidate := utils.Validate(user, u.Validate)
+
+	if err != nil {
+		return c.Status(400).JSON(utils.NewErrorResponse("invalid request body"))
+	}
+
+	if errValidate != "" {
+		return c.Status(400).JSON(utils.NewErrorResponse(errValidate))
+	}
+
+	updateFields := make(map[string]interface{})
+	v := reflect.ValueOf(&user).Elem()
+	t := v.Type()
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if !field.IsNil() {
+			jsonTag := t.Field(i).Tag.Get("json")
+			updateFields[jsonTag] = field.Interface()
+		}
+	}
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	updateUser := psql.Update("users").SetMap(updateFields).Where(sq.Eq{"id": id})
+	query, args, _ := updateUser.ToSql()
+	_, err = u.DB.Exec(query, args...)
+
+	if err != nil {
+		return c.Status(500).JSON(utils.NewErrorResponse("failed to execute SQL query"))
+	}
+
+	getUpdatedUser := psql.Select("*").From("users").Where(sq.Eq{"id": id})
+	query, args, _ = getUpdatedUser.ToSql()
+	err = u.DB.Get(&updatedUser, query, args...)
+	if err != nil {
+		return c.Status(500).JSON(utils.NewErrorResponse("failed to execute SQL query"))
+	}
+
+	return c.Status(200).JSON(utils.NewSuccessResponse("user with id "+id+" updated successfully", updatedUser))
 }
