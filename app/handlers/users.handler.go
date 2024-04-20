@@ -106,6 +106,7 @@ func (u *userHandler) UpdateUser(c *fiber.Ctx) error {
 		}
 	}
 
+	updateFields["updated_at"] = sq.Expr("timezone('utc', now())")
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	updateUser := psql.Update("users").SetMap(updateFields).Where(sq.Eq{"id": id})
 	query, args, _ := updateUser.ToSql()

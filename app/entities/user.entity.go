@@ -1,11 +1,13 @@
 package entities
 
 type UserModel struct {
-	ID       string  `db:"id" json:"id"`
-	Name     string  `db:"name" json:"name"`
-	Username string  `db:"username" json:"username"`
-	Email    string  `db:"email" json:"email"`
-	Avatar   *string `db:"avatar" json:"avatar"`
+	ID        string  `db:"id" json:"id"`
+	Name      string  `db:"name" json:"name"`
+	Username  string  `db:"username" json:"username"`
+	Email     string  `db:"email" json:"email"`
+	Avatar    *string `db:"avatar" json:"avatar"`
+	CreatedAt *string `db:"created_at" json:"created_at"`
+	UpdatedAt *string `db:"updated_at" json:"updated_at"`
 }
 
 type UserCreate struct {
