@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS bookmarks (
     summary TEXT,
     url TEXT NOT NULL,
     keyword TEXT NOT NULL,
+    is_private BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'utc'),
     updated_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'utc')
 );
