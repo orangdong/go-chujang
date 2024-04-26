@@ -6,8 +6,8 @@ type UserModel struct {
 	Username  string  `db:"username" json:"username"`
 	Email     string  `db:"email" json:"email"`
 	Avatar    *string `db:"avatar" json:"avatar"`
-	CreatedAt *string `db:"created_at" json:"created_at"`
-	UpdatedAt *string `db:"updated_at" json:"updated_at"`
+	CreatedAt *string `db:"created_at" json:"createdAt"`
+	UpdatedAt *string `db:"updated_at" json:"updatedAt"`
 }
 
 type UserCreate struct {
