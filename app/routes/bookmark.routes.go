@@ -13,4 +13,6 @@ func BookmarkRoutes(app *fiber.App, db *sqlx.DB) {
 	bookmarkHandler := handlers.NewBookmarkHandler(db, validate)
 
 	bookmarks.Get("/", bookmarkHandler.GetBookmarks)
+	bookmarks.Get("/:id", bookmarkHandler.GetBookmark)
+	bookmarks.Post("/", bookmarkHandler.CreateBookmark)
 }
