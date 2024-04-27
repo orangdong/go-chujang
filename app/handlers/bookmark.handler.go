@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-
 	sq "github.com/Masterminds/squirrel"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -75,9 +73,44 @@ func (bh *bookmarkHandler) CreateBookmark(c *fiber.Ctx) error {
 	_, err = bh.DB.Exec(query, args...)
 
 	if err != nil {
-		fmt.Println(err)
 		return c.Status(500).JSON(utils.NewErrorResponse("failed to execute SQL query"))
 	}
 
 	return c.Status(201).JSON(utils.NewSuccessResponse("bookmark created successfully", map[string]string{"id": bookmarkId.String(), "url": bookmark.URL}))
+}
+
+func (bh *bookmarkHandler) UpdateBookmark(c *fiber.Ctx) error {
+	// update bookmark
+	bookmark := entities.BookmarkUpdate{}
+	updatedBookmark := entities.BookmarkModel{}
+	id := c.Params("id")
+	err := c.BodyParser(&bookmark)
+	errValidate := utils.Validate(bookmark, bh.Validate)
+	if err != nil {
+		return c.Status(400).JSON(utils.NewErrorResponse("invalid request body"))
+	}
+
+	if errValidate != "" {
+		return c.Status(400).JSON(utils.NewErrorResponse(errValidate))
+	}
+
+	updateFields := utils.UpdatedFieldsMap(bookmark)
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	updateBookmark := psql.Update("bookmarks").SetMap(updateFields).Where(sq.Eq{"id": id})
+	query, args, _ := updateBookmark.ToSql()
+	_, err = bh.DB.Exec(query, args...)
+
+	if err != nil {
+		return c.Status(500).JSON(utils.NewErrorResponse("failed to execute SQL query"))
+	}
+
+	getUpdatedBookmark := psql.Select("*").From("bookmarks").Where(sq.Eq{"id": id})
+	query, args, _ = getUpdatedBookmark.ToSql()
+	err = bh.DB.Get(&updatedBookmark, query, args...)
+	if err != nil {
+		return c.Status(500).JSON(utils.NewErrorResponse("failed to execute SQL query"))
+	}
+
+	return c.Status(200).JSON(utils.NewSuccessResponse("bookmark updated successfully", updatedBookmark))
 }

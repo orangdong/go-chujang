@@ -17,5 +17,13 @@ type BookmarkCreate struct {
 	Summary   *string `json:"summary" validate:"omitempty"`
 	URL       string  `json:"url" validate:"required,url"`
 	KeyWords  string  `json:"keywords" validate:"required"`
-	IsPrivate bool    `json:"isPrivate" validate:"omitempty"`
+	IsPrivate bool    `db:"is_private" json:"isPrivate" validate:"omitempty"`
+}
+
+type BookmarkUpdate struct {
+	Title     *string `json:"title" validate:"omitempty"`
+	Summary   *string `json:"summary" validate:"omitempty"`
+	URL       *string `json:"url" validate:"omitempty,url"`
+	KeyWords  *string `json:"keywords" validate:"omitempty"`
+	IsPrivate *bool   `db:"is_private" json:"isPrivate" validate:"omitempty"`
 }
