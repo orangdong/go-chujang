@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"reflect"
-
 	sq "github.com/Masterminds/squirrel"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -95,18 +93,7 @@ func (u *userHandler) UpdateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(utils.NewErrorResponse(errValidate))
 	}
 
-	updateFields := make(map[string]interface{})
-	v := reflect.ValueOf(&user).Elem()
-	t := v.Type()
-	for i := 0; i < v.NumField(); i++ {
-		field := v.Field(i)
-		if !field.IsNil() {
-			jsonTag := t.Field(i).Tag.Get("json")
-			updateFields[jsonTag] = field.Interface()
-		}
-	}
-
-	updateFields["updated_at"] = sq.Expr("timezone('utc', now())")
+	updateFields := utils.UpdatedFieldsMap(user)
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	updateUser := psql.Update("users").SetMap(updateFields).Where(sq.Eq{"id": id})
 	query, args, _ := updateUser.ToSql()

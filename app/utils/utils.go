@@ -2,7 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -45,4 +47,28 @@ func Validate(data interface{}, validate *validator.Validate) string {
 	}
 
 	return validationErrors.String()
+}
+
+func UpdatedFieldsMap(data interface{}) map[string]interface{} {
+	updateFields := make(map[string]interface{})
+	now := time.Now().UTC()
+	v := reflect.ValueOf(data)
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if !field.IsNil() {
+			var tag string
+			tag = t.Field(i).Tag.Get("db")
+			if tag == "" {
+				tag = t.Field(i).Tag.Get("json")
+			}
+			if tag != "" {
+				updateFields[tag] = field.Interface()
+			}
+		}
+	}
+
+	updateFields["updated_at"] = now
+	return updateFields
 }
